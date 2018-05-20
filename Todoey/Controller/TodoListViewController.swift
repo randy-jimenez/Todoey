@@ -16,6 +16,7 @@ class TodoListViewController: UITableViewController {
 
     var itemArray: [TodoListItem] = []
 
+    // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
         loadTodoItemList()
@@ -46,7 +47,7 @@ class TodoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    // MARK: - Add New Items.
+    // MARK: - Add New Items
     @IBAction func addItemPressed(_ sender: UIBarButtonItem) {
         var textField: UITextField!
 
@@ -70,6 +71,7 @@ class TodoListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
 
+    // MARK: - CRUD Operations
     func saveTodoItemList() {
         do {
             try viewContext.save()
@@ -79,13 +81,6 @@ class TodoListViewController: UITableViewController {
         }
     }
 
-    // Overload
-    func loadTodoItemList() {
-        let request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()
-        loadTodoItemList(with: request)
-    }
-
-    // Or provide default.
     func loadTodoItemList(with request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()) {
         do {
             itemArray = try viewContext.fetch(request)
@@ -105,20 +100,16 @@ class TodoListViewController: UITableViewController {
 
 
 // MARK: - UISearchBarDelegate
-
 extension TodoListViewController: UISearchBarDelegate {
     // Delegate is set in Interface Builder.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if let searchString = searchBar.text {
+            let request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()
             if !searchString.isEmpty {
-                let request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()
                 request.predicate = NSPredicate(format: "title contains[cd] %@", searchString)
                 request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-                loadTodoItemList(with: request)
-            } else {
-                loadTodoItemList()
             }
+            loadTodoItemList(with: request)
         }
     }
 }
-
