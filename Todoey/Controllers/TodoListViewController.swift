@@ -10,15 +10,24 @@ import UIKit
 import CoreData
 
 
+protocol TodoListViewControllerDelegate {
+    func getCategory() -> Category
+}
+
+
 class TodoListViewController: UITableViewController {
     // MARK: - Properties
     let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     var itemArray: [TodoListItem] = []
+    var delegate: TodoListViewControllerDelegate?
+
+    @IBOutlet weak var navItem: UINavigationItem!
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
+        navItem.title = delegate?.getCategory().title
         loadTodoItemList()
     }
 
@@ -58,6 +67,7 @@ class TodoListViewController: UITableViewController {
                 if !newItemTitle.isEmpty {
                     let newItem = TodoListItem(context: self.viewContext)
                     newItem.title = newItemTitle
+                    newItem.category = self.delegate?.getCategory()
                     self.itemArray.append(newItem)
                     self.saveTodoItemList()
                 }
@@ -83,6 +93,7 @@ class TodoListViewController: UITableViewController {
 
     func loadTodoItemList(with request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()) {
         do {
+            request.predicate = NSPredicate(format: "category = %@", (delegate?.getCategory())!)
             itemArray = try viewContext.fetch(request)
             tableView.reloadData()
         } catch {
