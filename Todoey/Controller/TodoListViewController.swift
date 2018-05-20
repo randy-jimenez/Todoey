@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import CoreData
+
 
 class TodoListViewController: UITableViewController {
     // MARK: - Properties
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TodoListItems.plist")
+    let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     var itemArray: [TodoListItem] = []
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         loadTodoItemList()
@@ -53,7 +55,8 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             if let newItemTitle = textField.text {
                 if !newItemTitle.isEmpty {
-                    let newItem = TodoListItem(title: newItemTitle)
+                    let newItem = TodoListItem(context: self.viewContext)
+                    newItem.title = newItemTitle
                     self.itemArray.append(newItem)
                     self.saveTodoItemList()
                 }
@@ -67,25 +70,55 @@ class TodoListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
 
-    func loadTodoItemList() {
+    func saveTodoItemList() {
         do {
-            if let data = try? Data(contentsOf: dataFilePath!) {
-                let decoder = PropertyListDecoder()
-                itemArray = try decoder.decode(type(of: itemArray), from: data)
-            }
+            try viewContext.save()
+            tableView.reloadData()
         } catch {
-            print(error)
+            print("Unable to save Todo List Items \(error)")
         }
     }
 
-    func saveTodoItemList() {
+    // Overload
+    func loadTodoItemList() {
+        let request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()
+        loadTodoItemList(with: request)
+    }
+
+    // Or provide default.
+    func loadTodoItemList(with request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()) {
         do {
-            let encoder = PropertyListEncoder()
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+            itemArray = try viewContext.fetch(request)
             tableView.reloadData()
         } catch {
-            print(error)
+            print("Unable to load Todo List Items \(error)")
+        }
+    }
+
+    func removeItem(at index: Int) {
+        let itemToRemove: TodoListItem = itemArray[index]
+        viewContext.delete(itemToRemove)
+        itemArray.remove(at: index)
+        saveTodoItemList()
+    }
+}
+
+
+// MARK: - UISearchBarDelegate
+
+extension TodoListViewController: UISearchBarDelegate {
+    // Delegate is set in Interface Builder.
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if let searchString = searchBar.text {
+            if !searchString.isEmpty {
+                let request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()
+                request.predicate = NSPredicate(format: "title contains[cd] %@", searchString)
+                request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+                loadTodoItemList(with: request)
+            } else {
+                loadTodoItemList()
+            }
         }
     }
 }
+
