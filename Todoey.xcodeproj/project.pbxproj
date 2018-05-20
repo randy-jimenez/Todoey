@@ -56,30 +56,30 @@
 		2538C76C20AB99E6006FBD2F /* Todoey */ = {
 			isa = PBXGroup;
 			children = (
-				2538C78220AB9A5B006FBD2F /* Model */,
-				2538C77F20AB9A37006FBD2F /* Controller */,
-				2538C78020AB9A49006FBD2F /* View */,
+				2538C78220AB9A5B006FBD2F /* Models */,
+				2538C77F20AB9A37006FBD2F /* Controllers */,
+				2538C78020AB9A49006FBD2F /* Views */,
 				2538C78120AB9A50006FBD2F /* Supporting Files */,
 			);
 			path = Todoey;
 			sourceTree = "<group>";
 		};
-		2538C77F20AB9A37006FBD2F /* Controller */ = {
+		2538C77F20AB9A37006FBD2F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				2538C76D20AB99E6006FBD2F /* AppDelegate.swift */,
 				2538C76F20AB99E6006FBD2F /* TodoListViewController.swift */,
 			);
-			path = Controller;
+			path = Controllers;
 			sourceTree = "<group>";
 		};
-		2538C78020AB9A49006FBD2F /* View */ = {
+		2538C78020AB9A49006FBD2F /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				2538C77120AB99E6006FBD2F /* Main.storyboard */,
 				2538C77620AB99E7006FBD2F /* LaunchScreen.storyboard */,
 			);
-			path = View;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		2538C78120AB9A50006FBD2F /* Supporting Files */ = {
@@ -91,12 +91,12 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2538C78220AB9A5B006FBD2F /* Model */ = {
+		2538C78220AB9A5B006FBD2F /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				2536CD7020AE5CCA00FBD125 /* DataModel.xcdatamodeld */,
 			);
-			path = Model;
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
