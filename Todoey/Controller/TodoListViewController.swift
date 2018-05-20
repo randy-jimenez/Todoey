@@ -104,7 +104,11 @@ extension TodoListViewController: UISearchBarDelegate {
     // Delegate is set in Interface Builder.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         let request: NSFetchRequest<TodoListItem> = TodoListItem.fetchRequest()
-        if !searchText.isEmpty {
+        if searchText.isEmpty {
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        } else {
             request.predicate = NSPredicate(format: "title contains[cd] %@", searchText)
             request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         }
