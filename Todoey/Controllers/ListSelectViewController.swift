@@ -10,26 +10,28 @@ import UIKit
 import CoreData
 
 
-class CategoryViewController: UITableViewController, TodoListViewControllerDelegate {
+class ListSelectViewController: UITableViewController, ListItemsViewControllerDelegate {
     // MARK: - Properties
     let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    var categoryArray: [Category] = []
-    var selectCategory: Category!
+    var lists: [List] = []
+    var selectedList: List!
 
+    // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadCategories()
+        loadLists()
     }
 
     // MARK: - TodoListViewControllerDelegate methods
-    func getCategory() -> Category {
-        return selectCategory
+    func getSelectedList() -> List {
+        return selectedList
     }
 
+    // MARK: - Segue methods
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToItems" {
-            let destinationView = segue.destination as! TodoListViewController
+            let destinationView = segue.destination as! ListItemsViewController
             destinationView.delegate = self
         }
     }
@@ -40,54 +42,55 @@ class CategoryViewController: UITableViewController, TodoListViewControllerDeleg
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return lists.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        let category: Category = categoryArray[indexPath.row]
-        cell.textLabel?.text = category.title
+        let list: List = lists[indexPath.row]
+        cell.textLabel?.text = list.title
         return cell
     }
 
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectCategory = categoryArray[indexPath.row]
+        selectedList = lists[indexPath.row]
         performSegue(withIdentifier: "goToItems", sender: self)
     }
 
     // MARK: - CRUD methods
-    func saveCategories() {
+    func saveLists() {
         do {
             try viewContext.save()
             tableView.reloadData()
         } catch {
-            print(error)
+            print("Unable to save Lists \(error)")
         }
         
     }
 
-    func loadCategories(request: NSFetchRequest<Category> = Category.fetchRequest()) {
+    func loadLists(request: NSFetchRequest<List> = List.fetchRequest()) {
         do {
-            categoryArray = try viewContext.fetch(request)
+            lists = try viewContext.fetch(request)
             tableView.reloadData()
         } catch {
-            print(error)
+            print("Unable to load Lists \(error)")
         }
     }
 
-    @IBAction func addCategoryButtonPressed(_ sender: UIBarButtonItem) {
+    // MARK: - UI methods
+    @IBAction func addListButtonPressed(_ sender: UIBarButtonItem) {
         var textField: UITextField!
 
-        let alert = UIAlertController(title: "Add Category", message: "What category would you like to add?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add New List", message: "What would you like to call your new list?", preferredStyle: .alert)
 
-        let action = UIAlertAction(title: "Add", style: .default) { (action) in
-            if let newCategoryTitle = textField.text {
-                if !newCategoryTitle.isEmpty {
-                    let newCategory: Category = Category(context: self.viewContext)
-                    newCategory.title = newCategoryTitle
-                    self.categoryArray.append(newCategory)
-                    self.saveCategories()
+        let action = UIAlertAction(title: "Add List", style: .default) { (action) in
+            if let newListTitle = textField.text {
+                if !newListTitle.isEmpty {
+                    let newList: List = List(context: self.viewContext)
+                    newList.title = newListTitle
+                    self.lists.append(newList)
+                    self.saveLists()
                 }
             }
         }
@@ -95,7 +98,7 @@ class CategoryViewController: UITableViewController, TodoListViewControllerDeleg
         alert.addAction(action)
 
         alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Category name"
+            alertTextField.placeholder = "New List"
             textField = alertTextField
         }
 
