@@ -46,7 +46,7 @@ class ListSelectViewController: UITableViewController, ListItemsViewControllerDe
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
         let list: List = lists[indexPath.row]
         cell.textLabel?.text = list.title
         return cell

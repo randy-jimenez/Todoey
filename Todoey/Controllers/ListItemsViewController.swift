@@ -42,7 +42,7 @@ class ListItemsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath)
         let itemAtPath = items[indexPath.row]
         cell.textLabel?.text = itemAtPath.title
         cell.accessoryType = itemAtPath.isDone ? .checkmark : .none
