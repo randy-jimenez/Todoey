@@ -83,8 +83,8 @@ class ListSelectViewController: UITableViewController, ListItemsViewControllerDe
         var textField: UITextField!
 
         let alert = UIAlertController(title: "Add New List", message: "What would you like to call your new list?", preferredStyle: .alert)
-
-        let action = UIAlertAction(title: "Add List", style: .default) { (action) in
+        alert.addAction(UIAlertAction(title: "Add List", style: .default) {
+            (action) in
             if let newListTitle = textField.text {
                 if !newListTitle.isEmpty {
                     let newList: List = List(context: self.viewContext)
@@ -93,15 +93,12 @@ class ListSelectViewController: UITableViewController, ListItemsViewControllerDe
                     self.saveLists()
                 }
             }
-        }
-
-        alert.addAction(action)
-
-        alert.addTextField { (alertTextField) in
+        })
+        alert.addTextField {
+            (alertTextField) in
             alertTextField.placeholder = "New List"
             textField = alertTextField
         }
-
         present(alert, animated: true, completion: nil)
     }
 }

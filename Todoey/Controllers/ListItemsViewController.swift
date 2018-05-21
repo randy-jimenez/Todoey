@@ -96,9 +96,9 @@ class ListItemsViewController: UITableViewController {
         let listTitle: String = (delegate?.getSelectedList().title!)!
         var textField: UITextField!
         
-        let alert = UIAlertController(title: "Add New Item", message: "What would you like to add to your \(listTitle) list?", preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+        let alert = UIAlertController(title: "Add New Item", message: "What would you like to add to your \(listTitle) list?", preferredStyle: .alert)        
+        alert.addAction(UIAlertAction(title: "Add Item", style: .default) {
+            (action) in
             if let newItemTitle = textField.text {
                 if !newItemTitle.isEmpty {
                     let newItem = Item(context: self.viewContext)
@@ -108,9 +108,9 @@ class ListItemsViewController: UITableViewController {
                     self.saveItems()
                 }
             }
-        }
-        alert.addAction(action)
-        alert.addTextField { (alertTextField) in
+        })
+        alert.addTextField {
+            (alertTextField) in
             alertTextField.placeholder = "New Item"
             textField = alertTextField
         }
