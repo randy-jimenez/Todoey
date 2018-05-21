@@ -14,7 +14,12 @@ class ListItemsViewController: UITableViewController {
     // MARK: - Properties
     let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
-    var selectedList: List!
+    var selectedList: List! {
+        didSet {
+            loadItems()
+            navItem.title = selectedList.title
+        }
+    }
     var items: [Item] = []
 
     @IBOutlet weak var navItem: UINavigationItem!
@@ -22,8 +27,6 @@ class ListItemsViewController: UITableViewController {
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
-        navItem.title = selectedList.title
-        loadItems()
     }
 
     // MARK: - TableView DataSource Methods
