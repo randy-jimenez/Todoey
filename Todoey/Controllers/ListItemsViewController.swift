@@ -10,25 +10,19 @@ import UIKit
 import CoreData
 
 
-// MARK: - Protocols
-protocol ListItemsViewControllerDelegate {
-    func getSelectedList() -> List
-}
-
-
 class ListItemsViewController: UITableViewController {
     // MARK: - Properties
     let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
+    var selectedList: List!
     var items: [Item] = []
-    var delegate: ListItemsViewControllerDelegate?
 
     @IBOutlet weak var navItem: UINavigationItem!
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
-        navItem.title = delegate?.getSelectedList().title
+        navItem.title = selectedList.title
         loadItems()
     }
 
@@ -69,7 +63,7 @@ class ListItemsViewController: UITableViewController {
 
     func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
         do {
-            let listPredicate = NSPredicate(format: "list = %@", (delegate?.getSelectedList())!)
+            let listPredicate = NSPredicate(format: "list = %@", selectedList)
 
             if let existingPredicate = request.predicate {
                 request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [existingPredicate, listPredicate])
@@ -93,7 +87,7 @@ class ListItemsViewController: UITableViewController {
 
     // MARK: - UI methods
     @IBAction func addItemButtonPressed(_ sender: UIBarButtonItem) {
-        let listTitle: String = (delegate?.getSelectedList().title!)!
+        let listTitle: String = selectedList.title!
         var textField: UITextField!
         
         let alert = UIAlertController(title: "Add New Item", message: "What would you like to add to your \(listTitle) list?", preferredStyle: .alert)        
@@ -103,7 +97,7 @@ class ListItemsViewController: UITableViewController {
                 if !newItemTitle.isEmpty {
                     let newItem = Item(context: self.viewContext)
                     newItem.title = newItemTitle
-                    newItem.list = self.delegate?.getSelectedList()
+                    newItem.list = self.selectedList
                     self.items.append(newItem)
                     self.saveItems()
                 }

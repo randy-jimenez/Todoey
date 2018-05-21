@@ -10,30 +10,16 @@ import UIKit
 import CoreData
 
 
-class ListSelectViewController: UITableViewController, ListItemsViewControllerDelegate {
+class ListSelectViewController: UITableViewController {
     // MARK: - Properties
     let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var lists: [List] = []
-    var selectedList: List!
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
         loadLists()
-    }
-
-    // MARK: - TodoListViewControllerDelegate methods
-    func getSelectedList() -> List {
-        return selectedList
-    }
-
-    // MARK: - Segue methods
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToItems" {
-            let destinationView = segue.destination as! ListItemsViewController
-            destinationView.delegate = self
-        }
     }
 
     // MARK: - Table view data source
@@ -54,8 +40,17 @@ class ListSelectViewController: UITableViewController, ListItemsViewControllerDe
 
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedList = lists[indexPath.row]
         performSegue(withIdentifier: "goToItems", sender: self)
+    }
+
+    // MARK: - Segue methods
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToItems" {
+            if let indexPath: IndexPath = tableView.indexPathForSelectedRow {
+                let destinationView = segue.destination as! ListItemsViewController
+                destinationView.selectedList = lists[indexPath.row]
+            }
+        }
     }
 
     // MARK: - CRUD methods
