@@ -129,7 +129,7 @@ extension ListItemsViewController: UISearchBarDelegate {
                 searchBar.resignFirstResponder()
             }
         } else {
-            request.predicate = NSPredicate(format: "title contains[cd] %@", searchText)
+            request.predicate = NSPredicate(format: "title contains[cd] %@", searchText)
             request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         }
         loadItems(with: request)
