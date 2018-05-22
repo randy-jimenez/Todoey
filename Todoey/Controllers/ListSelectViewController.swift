@@ -7,19 +7,19 @@
 //
 
 import UIKit
-import CoreData
-
+import RealmSwift
 
 class ListSelectViewController: UITableViewController {
     // MARK: - Properties
-    let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let realm: Realm = try! Realm()
     
-    var lists: [List] = []
+    var lists: [Category]?
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadLists()
+        tableView.separatorStyle = .none
+        loadCategories()
     }
 
     // MARK: - Table view data source
@@ -28,13 +28,12 @@ class ListSelectViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lists.count
+        return lists?.count ?? 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
-        let list: List = lists[indexPath.row]
-        cell.textLabel?.text = list.title
+        cell.textLabel?.text = lists?[indexPath.row].title ?? "No lists found."
         return cell
     }
 
@@ -48,15 +47,17 @@ class ListSelectViewController: UITableViewController {
         if segue.identifier == "goToItems" {
             if let indexPath: IndexPath = tableView.indexPathForSelectedRow {
                 let destinationView = segue.destination as! ListItemsViewController
-                destinationView.selectedList = lists[indexPath.row]
+                destinationView.selectedCategory = lists?[indexPath.row]
             }
         }
     }
 
     // MARK: - CRUD methods
-    func saveLists() {
+    func saveCategory(category: Category) {
         do {
-            try viewContext.save()
+            try realm.write {
+                realm.add(category)
+            }
             tableView.reloadData()
         } catch {
             print("Unable to save Lists \(error)")
@@ -64,13 +65,9 @@ class ListSelectViewController: UITableViewController {
         
     }
 
-    func loadLists(request: NSFetchRequest<List> = List.fetchRequest()) {
-        do {
-            lists = try viewContext.fetch(request)
-            tableView.reloadData()
-        } catch {
-            print("Unable to load Lists \(error)")
-        }
+    func loadCategories() {
+        lists = Array(realm.objects(Category.self))
+        tableView.reloadData()
     }
 
     // MARK: - UI methods
@@ -82,10 +79,10 @@ class ListSelectViewController: UITableViewController {
             (action) in
             if let newListTitle = textField.text {
                 if !newListTitle.isEmpty {
-                    let newList: List = List(context: self.viewContext)
+                    let newList: Category = Category()
                     newList.title = newListTitle
-                    self.lists.append(newList)
-                    self.saveLists()
+                    self.lists?.append(newList)
+                    self.saveCategory(category: newList)
                 }
             }
         })

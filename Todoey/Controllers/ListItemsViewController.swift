@@ -7,26 +7,26 @@
 //
 
 import UIKit
-import CoreData
-
+import RealmSwift
 
 class ListItemsViewController: UITableViewController {
     // MARK: - Properties
-    let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let realm: Realm = try! Realm()
 
-    var selectedList: List! {
+    var selectedCategory: Category? {
         didSet {
             loadItems()
-            navItem.title = selectedList.title
+            navItem.title = selectedCategory?.title
         }
     }
-    var items: [Item] = []
+    var items: [Item]?
 
     @IBOutlet weak var navItem: UINavigationItem!
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.separatorStyle = .none
     }
 
     // MARK: - TableView DataSource Methods
@@ -35,62 +35,61 @@ class ListItemsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return items?.count ?? 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath)
-        let itemAtPath = items[indexPath.row]
-        cell.textLabel?.text = itemAtPath.title
-        cell.accessoryType = itemAtPath.isDone ? .checkmark : .none
+
+        if let itemAtPath = items?[indexPath.row] {
+            cell.textLabel?.text = itemAtPath.title
+            cell.accessoryType = itemAtPath.isDone ? .checkmark : .none
+        } else {
+            cell.textLabel?.text = "No items found"
+        }
+
         return cell
     }
 
     // MARK: - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let itemAtPath = items[indexPath.row]
-        itemAtPath.isDone = !itemAtPath.isDone
-        saveItems()
+        if let itemAtPath = items?[indexPath.row] {
+            itemAtPath.isDone = !itemAtPath.isDone
+            saveItem(item: itemAtPath)
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
     // MARK: - CRUD Operations
-    func saveItems() {
+    func saveItem(item: Item) {
         do {
-            try viewContext.save()
-            tableView.reloadData()
+            if let category = self.selectedCategory {
+                try realm.write {
+                    realm.add(item)
+                    category.items.append(item)
+                }
+                // Must reload items as we're using arrays not results.
+                //loadItems()
+                tableView.reloadData()
+            }
         } catch {
             print("Unable to save List Items \(error)")
         }
     }
 
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
-        do {
-            let listPredicate = NSPredicate(format: "list = %@", selectedList)
-
-            if let existingPredicate = request.predicate {
-                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [existingPredicate, listPredicate])
-            } else {
-                request.predicate = listPredicate
-            }
-
-            items = try viewContext.fetch(request)
+    func loadItems() {
+        if let results = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true) {
+            items = Array(results)
             tableView.reloadData()
-        } catch {
-            print("Unable to load List Items \(error)")
         }
     }
 
     func removeItem(at index: Int) {
-        let itemToRemove: Item = items[index]
-        viewContext.delete(itemToRemove)
-        items.remove(at: index)
-        saveItems()
     }
 
     // MARK: - UI methods
     @IBAction func addItemButtonPressed(_ sender: UIBarButtonItem) {
-        let listTitle: String = selectedList.title!
+        let listTitle: String = selectedCategory?.title ?? "No list selected"
         var textField: UITextField!
         
         let alert = UIAlertController(title: "Add New Item", message: "What would you like to add to your \(listTitle) list?", preferredStyle: .alert)        
@@ -98,11 +97,10 @@ class ListItemsViewController: UITableViewController {
             (action) in
             if let newItemTitle = textField.text {
                 if !newItemTitle.isEmpty {
-                    let newItem = Item(context: self.viewContext)
+                    let newItem = Item()
                     newItem.title = newItemTitle
-                    newItem.list = self.selectedList
-                    self.items.append(newItem)
-                    self.saveItems()
+                    self.items?.append(newItem) // WHy doesn't this update when you reloadData?
+                    self.saveItem(item: newItem)
                 }
             }
         })
@@ -115,7 +113,7 @@ class ListItemsViewController: UITableViewController {
     }
 }
 
-
+/*
 // MARK: - UISearchBarDelegate
 extension ListItemsViewController: UISearchBarDelegate {
     // Delegate is set in Interface Builder.
@@ -132,3 +130,4 @@ extension ListItemsViewController: UISearchBarDelegate {
         loadItems(with: request)
     }
 }
+*/
