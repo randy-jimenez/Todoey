@@ -77,12 +77,12 @@ class CategoryViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New List", message: "What would you like to call your new list?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Add List", style: .default) {
             (action) in
-            if let newListTitle = textField.text {
-                if !newListTitle.isEmpty {
-                    let newList: Category = Category()
-                    newList.title = newListTitle
-                    self.categories?.append(newList)
-                    self.saveCategory(category: newList)
+            if let newCategoryTitle = textField.text {
+                if !newCategoryTitle.isEmpty {
+                    let newCategory: Category = Category()
+                    newCategory.title = newCategoryTitle
+                    self.categories?.append(newCategory)
+                    self.saveCategory(category: newCategory)
                 }
             }
         })
