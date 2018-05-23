@@ -68,8 +68,6 @@ class ItemsViewController: UITableViewController {
                     realm.add(item)
                     category.items.append(item)
                 }
-                // Must reload items as we're using arrays not results.
-                //loadItems()
                 tableView.reloadData()
             }
         } catch {
@@ -99,7 +97,7 @@ class ItemsViewController: UITableViewController {
                 if !newItemTitle.isEmpty {
                     let newItem = Item()
                     newItem.title = newItemTitle
-                    self.items?.append(newItem) // WHy doesn't this update when you reloadData?
+                    self.items?.append(newItem)
                     self.saveItem(item: newItem)
                 }
             }
