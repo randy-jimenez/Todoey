@@ -12,13 +12,13 @@
         <!--My Lists-->
         <scene sceneID="XH8-w3-Ig9">
             <objects>
-                <tableViewController id="JTv-0E-IKT" customClass="ListSelectViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="JTv-0E-IKT" customClass="CategoryViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="uXJ-do-2bR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ListCell" id="pL4-hq-95B">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryCell" id="pL4-hq-95B">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pL4-hq-95B" id="zGU-iY-3uM">
@@ -36,7 +36,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="X2c-Kb-ejQ">
                             <color key="tintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
-                                <action selector="addListButtonPressed:" destination="JTv-0E-IKT" id="sYg-3x-PbJ"/>
+                                <action selector="addCategoryButtonPressed:" destination="JTv-0E-IKT" id="PYC-t3-evt"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -51,7 +51,7 @@
         <!--List Name-->
         <scene sceneID="Tg5-ka-obB">
             <objects>
-                <tableViewController id="aLm-Dc-IA9" customClass="ListItemsViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="aLm-Dc-IA9" customClass="ItemsViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="GnT-4K-CFa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -83,7 +83,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="hiH-nE-y9w">
                             <color key="tintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
-                                <action selector="addItemButtonPressed:" destination="aLm-Dc-IA9" id="n6n-2w-u8K"/>
+                                <action selector="addItemButtonPressed:" destination="aLm-Dc-IA9" id="cVX-MX-Wpt"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

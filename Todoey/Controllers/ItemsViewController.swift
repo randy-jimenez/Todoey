@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class ListItemsViewController: UITableViewController {
+class ItemsViewController: UITableViewController {
     // MARK: - Properties
     let realm: Realm = try! Realm()
 

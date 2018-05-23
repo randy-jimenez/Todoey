@@ -9,11 +9,11 @@
 import UIKit
 import RealmSwift
 
-class ListSelectViewController: UITableViewController {
+class CategoryViewController: UITableViewController {
     // MARK: - Properties
     let realm: Realm = try! Realm()
     
-    var lists: [Category]?
+    var categories: [Category]?
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
@@ -28,12 +28,12 @@ class ListSelectViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lists?.count ?? 1
+        return categories?.count ?? 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
-        cell.textLabel?.text = lists?[indexPath.row].title ?? "No lists found."
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        cell.textLabel?.text = categories?[indexPath.row].title ?? "No lists found."
         return cell
     }
 
@@ -46,8 +46,8 @@ class ListSelectViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToItems" {
             if let indexPath: IndexPath = tableView.indexPathForSelectedRow {
-                let destinationView = segue.destination as! ListItemsViewController
-                destinationView.selectedCategory = lists?[indexPath.row]
+                let destinationView = segue.destination as! ItemsViewController
+                destinationView.selectedCategory = categories?[indexPath.row]
             }
         }
     }
@@ -66,12 +66,12 @@ class ListSelectViewController: UITableViewController {
     }
 
     func loadCategories() {
-        lists = Array(realm.objects(Category.self))
+        categories = Array(realm.objects(Category.self))
         tableView.reloadData()
     }
 
     // MARK: - UI methods
-    @IBAction func addListButtonPressed(_ sender: UIBarButtonItem) {
+    @IBAction func addCategoryButtonPressed(_ sender: UIBarButtonItem) {
         var textField: UITextField!
 
         let alert = UIAlertController(title: "Add New List", message: "What would you like to call your new list?", preferredStyle: .alert)
@@ -81,7 +81,7 @@ class ListSelectViewController: UITableViewController {
                 if !newListTitle.isEmpty {
                     let newList: Category = Category()
                     newList.title = newListTitle
-                    self.lists?.append(newList)
+                    self.categories?.append(newList)
                     self.saveCategory(category: newList)
                 }
             }
