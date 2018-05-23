@@ -13,7 +13,7 @@ class CategoryViewController: UITableViewController {
     // MARK: - Properties
     let realm: Realm = try! Realm()
     
-    var categories: [Category]?
+    var categories: Results<Category>?
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
@@ -66,7 +66,7 @@ class CategoryViewController: UITableViewController {
     }
 
     func loadCategories() {
-        categories = Array(realm.objects(Category.self))
+        categories = realm.objects(Category.self)
         tableView.reloadData()
     }
 
@@ -81,7 +81,6 @@ class CategoryViewController: UITableViewController {
                 if !newCategoryTitle.isEmpty {
                     let newCategory: Category = Category()
                     newCategory.title = newCategoryTitle
-                    self.categories?.append(newCategory)
                     self.saveCategory(category: newCategory)
                 }
             }
