@@ -19,7 +19,7 @@ class ItemsViewController: UITableViewController {
             navItem.title = selectedCategory?.title
         }
     }
-    var items: [Item]?
+    var items: Results<Item>?
 
     @IBOutlet weak var navItem: UINavigationItem!
 
@@ -54,32 +54,23 @@ class ItemsViewController: UITableViewController {
     // MARK: - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let itemAtPath = items?[indexPath.row] {
-            itemAtPath.isDone = !itemAtPath.isDone
-            saveItem(item: itemAtPath)
+            do {
+                try realm.write {
+                    itemAtPath.isDone = !itemAtPath.isDone
+                    realm.add(itemAtPath, update: true)
+                }
+                tableView.reloadData()
+            } catch {
+                print("Unable to save List Items \(error)")
+            }
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
     // MARK: - CRUD Operations
-    func saveItem(item: Item) {
-        do {
-            if let category = self.selectedCategory {
-                try realm.write {
-                    realm.add(item)
-                    category.items.append(item)
-                }
-                tableView.reloadData()
-            }
-        } catch {
-            print("Unable to save List Items \(error)")
-        }
-    }
-
     func loadItems() {
-        if let results = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true) {
-            items = Array(results)
-            tableView.reloadData()
-        }
+        items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        tableView.reloadData()
     }
 
     func removeItem(at index: Int) {
@@ -97,8 +88,17 @@ class ItemsViewController: UITableViewController {
                 if !newItemTitle.isEmpty {
                     let newItem = Item()
                     newItem.title = newItemTitle
-                    self.items?.append(newItem)
-                    self.saveItem(item: newItem)
+                    do {
+                        if let category = self.selectedCategory {
+                            try self.realm.write {
+                                self.realm.add(newItem)
+                                category.items.append(newItem)
+                            }
+                            self.tableView.reloadData()
+                        }
+                    } catch {
+                        print("Unable to save List Items \(error)")
+                    }
                 }
             }
         })

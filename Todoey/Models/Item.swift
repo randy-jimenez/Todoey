@@ -10,7 +10,12 @@ import Foundation
 import RealmSwift
 
 class Item: Object {
+    @objc dynamic var id: String = UUID().uuidString
     @objc dynamic var title: String = ""
     @objc dynamic var isDone: Bool = false
     var category = LinkingObjects(fromType: Category.self, property: "items")
+
+    override static func primaryKey() -> String? {
+        return "id"
+    }
 }
