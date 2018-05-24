@@ -68,8 +68,11 @@ class ItemsViewController: UITableViewController {
     }
 
     // MARK: - CRUD Operations
-    func loadItems() {
+    func loadItems(predicate: NSPredicate? = nil) {
         items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        if let filter = predicate {
+            items = items?.filter(filter)
+        }
         tableView.reloadData()
     }
 
@@ -84,19 +87,19 @@ class ItemsViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New Item", message: "What would you like to add to your \(listTitle) list?", preferredStyle: .alert)        
         alert.addAction(UIAlertAction(title: "Add Item", style: .default) {
             (action) in
-            if let newItemTitle = textField.text {
-                if !newItemTitle.isEmpty {
-                    do {
-                        if let category = self.selectedCategory {
+            if let category = self.selectedCategory {
+                if let newItemTitle = textField.text {
+                    if !newItemTitle.isEmpty {
+                        do {
                             try self.realm.write {
                                 let newItem = Item()
-                                newItem.title = newItemTitle 
+                                newItem.title = newItemTitle
                                 category.items.append(newItem)
+                                self.tableView.reloadData()
                             }
-                            self.tableView.reloadData()
+                        } catch {
+                            print("Unable to save List Items \(error)")
                         }
-                    } catch {
-                        print("Unable to save List Items \(error)")
                     }
                 }
             }
@@ -121,9 +124,7 @@ extension ItemsViewController: UISearchBarDelegate {
                 searchBar.resignFirstResponder()
             }
         } else {
-            let predicate = NSPredicate(format: "title contains[cd] %@", searchText)
-            items = selectedCategory?.items.filter(predicate).sorted(byKeyPath: "title", ascending: true)
-            tableView.reloadData()
+            loadItems(predicate: NSPredicate(format: "title contains[cd] %@", searchText))
         }
     }
 }
