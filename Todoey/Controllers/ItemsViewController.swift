@@ -57,7 +57,6 @@ class ItemsViewController: UITableViewController {
             do {
                 try realm.write {
                     itemAtPath.isDone = !itemAtPath.isDone
-                    realm.add(itemAtPath, update: true)
                 }
                 tableView.reloadData()
             } catch {
