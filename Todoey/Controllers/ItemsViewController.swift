@@ -57,7 +57,7 @@ class ItemsViewController: UITableViewController {
             do {
                 try realm.write {
                     itemAtPath.isDone = !itemAtPath.isDone
-                    tableView.reloadData() 
+                    tableView.reloadData()
                 }
             } catch {
                 print("Unable to save List Items \(error)")
@@ -75,7 +75,15 @@ class ItemsViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    func removeItem(at index: Int) {
+    func removeItem(item: Item) {
+        do {
+            try realm.write {
+                realm.delete(item)
+                tableView.reloadData()
+            }
+        } catch {
+            print("Unable to delete List Items \(error)")
+        }
     }
 
     // MARK: - UI methods
