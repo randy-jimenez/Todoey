@@ -111,21 +111,20 @@ class ItemsViewController: UITableViewController {
     }
 }
 
-/*
+
 // MARK: - UISearchBarDelegate
-extension ListItemsViewController: UISearchBarDelegate {
+extension ItemsViewController: UISearchBarDelegate {
     // Delegate is set in Interface Builder.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
         if searchText.isEmpty {
+            loadItems()
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
         } else {
-            request.predicate = NSPredicate(format: "title contains[cd] %@", searchText)
-            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+            let predicate = NSPredicate(format: "title contains[cd] %@", searchText)
+            items = selectedCategory?.items.filter(predicate).sorted(byKeyPath: "title", ascending: true)
+            tableView.reloadData()
         }
-        loadItems(with: request)
     }
 }
-*/
