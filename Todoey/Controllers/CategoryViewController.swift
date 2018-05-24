@@ -57,8 +57,8 @@ class CategoryViewController: UITableViewController {
         do {
             try realm.write {
                 realm.add(category)
+                tableView.reloadData()
             }
-            tableView.reloadData()
         } catch {
             print("Unable to save Lists \(error)")
         }

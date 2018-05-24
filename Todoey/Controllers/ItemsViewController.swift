@@ -57,8 +57,8 @@ class ItemsViewController: UITableViewController {
             do {
                 try realm.write {
                     itemAtPath.isDone = !itemAtPath.isDone
+                    tableView.reloadData() 
                 }
-                tableView.reloadData()
             } catch {
                 print("Unable to save List Items \(error)")
             }
