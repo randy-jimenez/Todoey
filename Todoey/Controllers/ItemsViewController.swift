@@ -86,12 +86,11 @@ class ItemsViewController: UITableViewController {
             (action) in
             if let newItemTitle = textField.text {
                 if !newItemTitle.isEmpty {
-                    let newItem = Item()
-                    newItem.title = newItemTitle
                     do {
                         if let category = self.selectedCategory {
                             try self.realm.write {
-                                self.realm.add(newItem)
+                                let newItem = Item()
+                                newItem.title = newItemTitle 
                                 category.items.append(newItem)
                             }
                             self.tableView.reloadData()
