@@ -67,8 +67,8 @@ class ItemsViewController: UITableViewController {
     }
 
     // MARK: - CRUD Operations
-    func loadItems(predicate: NSPredicate? = nil) {
-        items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+    func loadItems(filterBy predicate: NSPredicate? = nil, sortedBy sort: String = "dateCreated") {
+        items = selectedCategory?.items.sorted(byKeyPath: sort, ascending: true)
         if let filter = predicate {
             items = items?.filter(filter)
         }
@@ -120,7 +120,6 @@ class ItemsViewController: UITableViewController {
     }
 }
 
-
 // MARK: - UISearchBarDelegate
 extension ItemsViewController: UISearchBarDelegate {
     // Delegate is set in Interface Builder.
@@ -131,7 +130,7 @@ extension ItemsViewController: UISearchBarDelegate {
                 searchBar.resignFirstResponder()
             }
         } else {
-            loadItems(predicate: NSPredicate(format: "title contains[cd] %@", searchText))
+            loadItems(filterBy: NSPredicate(format: "title contains[cd] %@", searchText), sortedBy: "title")
         }
     }
 }
