@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 import SwipeCellKit
 
-class CategoryViewController: UITableViewController, SwipeTableViewCellDelegate {
+class CategoryViewController: UITableViewController {
     // MARK: - Properties
     let realm: Realm = try! Realm()
     
@@ -42,20 +42,6 @@ class CategoryViewController: UITableViewController, SwipeTableViewCellDelegate 
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "goToItems", sender: self)
-    }
-
-    // MARK: - Swipe table view cell delegate methods
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        var swipeActions: [SwipeAction] = []
-        if orientation == .right {
-            let deleteSwipeAction = SwipeAction(style: .destructive, title: "Delete List?") {
-                (action, indexPath) in
-                self.removeCategory(category: (self.categories?[indexPath.row])!)
-            }
-            deleteSwipeAction.image = UIImage(named: "delete")
-            swipeActions.append(deleteSwipeAction)
-        }
-        return swipeActions
     }
 
     // MARK: - Segue methods
@@ -118,5 +104,21 @@ class CategoryViewController: UITableViewController, SwipeTableViewCellDelegate 
             textField = alertTextField
         }
         present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - SwipeTableViewCellDelegate
+extension CategoryViewController: SwipeTableViewCellDelegate {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        var swipeActions: [SwipeAction] = []
+        if orientation == .right {
+            let deleteSwipeAction = SwipeAction(style: .destructive, title: "Delete List?") {
+                (action, indexPath) in
+                self.removeCategory(category: (self.categories?[indexPath.row])!)
+            }
+            deleteSwipeAction.image = UIImage(named: "delete")
+            swipeActions.append(deleteSwipeAction)
+        }
+        return swipeActions
     }
 }

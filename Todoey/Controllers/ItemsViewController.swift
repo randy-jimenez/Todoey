@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 import SwipeCellKit
 
-class ItemsViewController: UITableViewController, SwipeTableViewCellDelegate {
+class ItemsViewController: UITableViewController {
     // MARK: - Properties
     let realm: Realm = try! Realm()
 
@@ -68,19 +68,6 @@ class ItemsViewController: UITableViewController, SwipeTableViewCellDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    // MARK: - SwipeTableViewCellDelegate methods
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        var swipeActions: [SwipeAction] = []
-        if orientation == .right {
-            let deleteAction = SwipeAction(style: .destructive, title: "Delete Item?") {
-                (action, indexPath) in
-                self.removeItem(item: (self.items?[indexPath.row])!)
-            }
-            swipeActions.append(deleteAction)
-        }
-        return swipeActions
-    }
-
     // MARK: - CRUD Operations
     func loadItems(filterBy predicate: NSPredicate? = nil, sortedBy sort: String = "dateCreated") {
         items = selectedCategory?.items.sorted(byKeyPath: sort, ascending: true)
@@ -132,6 +119,21 @@ class ItemsViewController: UITableViewController, SwipeTableViewCellDelegate {
             textField = alertTextField
         }
         present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - SwipeTableViewCellDelegate
+extension ItemsViewController: SwipeTableViewCellDelegate {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        var swipeActions: [SwipeAction] = []
+        if orientation == .right {
+            let deleteAction = SwipeAction(style: .destructive, title: "Delete Item?") {
+                (action, indexPath) in
+                self.removeItem(item: (self.items?[indexPath.row])!)
+            }
+            swipeActions.append(deleteAction)
+        }
+        return swipeActions
     }
 }
 
