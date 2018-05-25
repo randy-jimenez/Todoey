@@ -117,7 +117,9 @@ extension CategoryViewController: SwipeTableViewCellDelegate {
         if orientation == .right {
             let deleteAction = SwipeAction(style: .destructive, title: "Delete List?") {
                 (action, indexPath) in
-                self.removeCategory(category: (self.categories?[indexPath.row])!)
+                if let category = self.categories?[indexPath.row] {
+                    self.removeCategory(category: category)
+                }
             }
             deleteAction.image = UIImage(named: "delete")
             swipeActions.append(deleteAction)

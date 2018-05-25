@@ -130,7 +130,9 @@ extension ItemsViewController: SwipeTableViewCellDelegate {
         if orientation == .right {
             let deleteAction = SwipeAction(style: .destructive, title: "Delete Item?") {
                 (action, indexPath) in
-                self.removeItem(item: (self.items?[indexPath.row])!)
+                if let item = self.items?[indexPath.row] {
+                    self.removeItem(item: item)
+                }
             }
             deleteAction.image = UIImage(named: "delete")
             swipeActions.append(deleteAction)
