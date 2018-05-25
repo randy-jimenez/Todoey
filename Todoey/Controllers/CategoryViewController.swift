@@ -8,8 +8,9 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: UITableViewController, SwipeTableViewCellDelegate {
     // MARK: - Properties
     let realm: Realm = try! Realm()
     
@@ -32,7 +33,8 @@ class CategoryViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
         cell.textLabel?.text = categories?[indexPath.row].title ?? "No lists found."
         return cell
     }
@@ -40,6 +42,15 @@ class CategoryViewController: UITableViewController {
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "goToItems", sender: self)
+    }
+
+    // MARK: - Swipe table view cell delegate methods
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        return [SwipeAction(style: .destructive, title: "Delete List?") {
+            (action, indexPath) in
+            self.removeCategory(category: (self.categories?[indexPath.row])!)
+        },
+        ]
     }
 
     // MARK: - Segue methods
@@ -68,6 +79,17 @@ class CategoryViewController: UITableViewController {
     func loadCategories() {
         categories = realm.objects(Category.self).sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
+    }
+
+    func removeCategory(category: Category) {
+        do {
+            try realm.write {
+                realm.delete(category)
+                tableView.reloadData()
+            }
+        } catch {
+            print("Unable to remove List \(error)")
+        }
     }
 
     // MARK: - UI methods
