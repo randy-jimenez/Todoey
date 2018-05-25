@@ -79,7 +79,6 @@ class CategoryViewController: UITableViewController {
                    realm.delete(item)
                 }
                 realm.delete(category)
-                tableView.reloadData()
             }
         } catch {
             print("Unable to remove List \(error)")
@@ -130,7 +129,7 @@ extension CategoryViewController: SwipeTableViewCellDelegate {
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
         var options = SwipeTableOptions()
         if orientation == .right {
-            options.expansionStyle = .fill
+            options.expansionStyle = .destructive
         }
         return options
     }

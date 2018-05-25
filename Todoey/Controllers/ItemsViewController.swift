@@ -82,7 +82,6 @@ class ItemsViewController: UITableViewController {
         do {
             try realm.write {
                 realm.delete(item)
-                tableView.reloadData()
             }
         } catch {
             print("Unable to delete List Items \(error)")
