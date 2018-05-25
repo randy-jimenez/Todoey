@@ -19,6 +19,7 @@ class CategoryViewController: UITableViewController {
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 80
         tableView.separatorStyle = .none
         loadCategories()
     }
