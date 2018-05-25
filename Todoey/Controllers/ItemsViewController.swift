@@ -8,8 +8,9 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
-class ItemsViewController: UITableViewController {
+class ItemsViewController: UITableViewController, SwipeTableViewCellDelegate {
     // MARK: - Properties
     let realm: Realm = try! Realm()
 
@@ -39,7 +40,8 @@ class ItemsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
 
         if let itemAtPath = items?[indexPath.row] {
             cell.textLabel?.text = itemAtPath.title
@@ -64,6 +66,19 @@ class ItemsViewController: UITableViewController {
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+
+    // MARK: - SwipeTableViewCellDelegate methods
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        var swipeActions: [SwipeAction] = []
+        if orientation == .right {
+            let deleteAction = SwipeAction(style: .destructive, title: "Delete Item?") {
+                (action, indexPath) in
+                self.removeItem(item: (self.items?[indexPath.row])!)
+            }
+            swipeActions.append(deleteAction)
+        }
+        return swipeActions
     }
 
     // MARK: - CRUD Operations
