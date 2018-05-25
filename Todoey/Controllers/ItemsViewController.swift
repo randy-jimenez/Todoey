@@ -17,12 +17,25 @@ class ItemsViewController: SwipeToTableViewController {
     var selectedCategory: Category? {
         didSet {
             loadItems()
-            navItem.title = selectedCategory?.title
+            baseColor = UIColor(hexString: selectedCategory?.backgroundColor)!
         }
     }
+    var baseColor: UIColor!
     var items: Results<Item>?
 
     @IBOutlet weak var navItem: UINavigationItem!
+    @IBOutlet weak var addButton: UIBarButtonItem!
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let navBar = navigationController?.navigationBar {
+            let contrastColor = ContrastColorOf(baseColor, returnFlat: true)
+            navBar.barTintColor = baseColor
+            navBar.tintColor = contrastColor
+            navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
+            navItem.title = selectedCategory?.title
+        }
+    }
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
@@ -42,9 +55,12 @@ class ItemsViewController: SwipeToTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let itemAtPath = items?[indexPath.row] {
-            cell.backgroundColor = UIColor(hexString: selectedCategory?.backgroundColor).darken(byPercentage: CGFloat(indexPath.row) * 0.10)
+            let percentage = CGFloat(indexPath.row) * 0.75 / CGFloat(items!.count)
+            cell.backgroundColor = baseColor.darken(byPercentage: percentage)
+            let contrastColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
+            cell.tintColor = contrastColor
+            cell.textLabel?.textColor = contrastColor
             cell.textLabel?.text = itemAtPath.title
-            cell.textLabel?.textColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
             cell.accessoryType = itemAtPath.isDone ? .checkmark : .none
         } else {
             cell.textLabel?.text = "No items found"
