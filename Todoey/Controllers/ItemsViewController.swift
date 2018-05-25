@@ -142,7 +142,7 @@ extension ItemsViewController: SwipeTableViewCellDelegate {
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
         var options = SwipeTableOptions()
         if orientation == .right {
-            options.expansionStyle = .fill
+            options.expansionStyle = .destructive
         }
         return options
     }
