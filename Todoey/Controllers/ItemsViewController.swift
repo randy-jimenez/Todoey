@@ -92,7 +92,8 @@ class ItemsViewController: SwipeToTableViewController {
         let listTitle: String = selectedCategory?.title ?? "No list selected"
         var textField: UITextField!
         
-        let alert = UIAlertController(title: "Add New Item", message: "What would you like to add to your \(listTitle) list?", preferredStyle: .alert)        
+        let alert = UIAlertController(title: "Add New Item", message: "What would you like to add to your \(listTitle) list?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Add Item", style: .default) {
             (action) in
             if let category = self.selectedCategory {

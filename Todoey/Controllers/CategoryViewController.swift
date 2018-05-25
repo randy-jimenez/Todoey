@@ -97,6 +97,7 @@ class CategoryViewController: SwipeToTableViewController {
         var textField: UITextField!
 
         let alert = UIAlertController(title: "Add New List", message: "What would you like to call your new list?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Add List", style: .default) {
             (action) in
             if let newCategoryTitle = textField.text {
