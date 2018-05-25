@@ -65,7 +65,6 @@ class CategoryViewController: UITableViewController {
         } catch {
             print("Unable to save Lists \(error)")
         }
-        
     }
 
     func loadCategories() {
@@ -76,6 +75,9 @@ class CategoryViewController: UITableViewController {
     func removeCategory(category: Category) {
         do {
             try realm.write {
+                for item in category.items {
+                   realm.delete(item)
+                }
                 realm.delete(category)
                 tableView.reloadData()
             }
