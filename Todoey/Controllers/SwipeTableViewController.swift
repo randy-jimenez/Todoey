@@ -10,6 +10,12 @@ import UIKit
 import SwipeCellKit
 
 class SwipeToTableViewController: UITableViewController, SwipeTableViewCellDelegate {
+    // MARK: - viewDidLoad()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.rowHeight = 80
+    }
+
     func removeObject(forRowAt indexPath: IndexPath) {
     }
 

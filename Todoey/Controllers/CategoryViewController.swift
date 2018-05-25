@@ -18,7 +18,6 @@ class CategoryViewController: SwipeToTableViewController {
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 80
         tableView.separatorStyle = .none
         loadCategories()
     }
@@ -70,7 +69,7 @@ class CategoryViewController: SwipeToTableViewController {
         tableView.reloadData()
     }
 
-    override func removeObject(forRowAt indexPath: IndexPath) { 
+    override func removeObject(forRowAt indexPath: IndexPath) {
         if let category = categories?[indexPath.row] {
             do {
                 try realm.write {
