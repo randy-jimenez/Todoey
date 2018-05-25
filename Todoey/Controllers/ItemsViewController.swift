@@ -17,7 +17,7 @@ class ItemsViewController: SwipeToTableViewController {
     var selectedCategory: Category? {
         didSet {
             loadItems()
-            baseColor = UIColor(hexString: selectedCategory?.backgroundColor)!
+            baseColor = UIColor(hexString: selectedCategory!.backgroundColor)!
         }
     }
     var baseColor: UIColor!
@@ -32,8 +32,10 @@ class ItemsViewController: SwipeToTableViewController {
             let contrastColor = ContrastColorOf(baseColor, returnFlat: true)
             navBar.barTintColor = baseColor
             navBar.tintColor = contrastColor
+            navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
             navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
             navItem.title = selectedCategory?.title
+            //tableView.backgroundColor = baseColor
         }
     }
 
