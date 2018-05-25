@@ -112,12 +112,12 @@ extension CategoryViewController: SwipeTableViewCellDelegate {
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         var swipeActions: [SwipeAction] = []
         if orientation == .right {
-            let deleteSwipeAction = SwipeAction(style: .destructive, title: "Delete List?") {
+            let deleteAction = SwipeAction(style: .destructive, title: "Delete List?") {
                 (action, indexPath) in
                 self.removeCategory(category: (self.categories?[indexPath.row])!)
             }
-            deleteSwipeAction.image = UIImage(named: "delete")
-            swipeActions.append(deleteSwipeAction)
+            deleteAction.image = UIImage(named: "delete")
+            swipeActions.append(deleteAction)
         }
         return swipeActions
     }

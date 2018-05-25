@@ -131,6 +131,7 @@ extension ItemsViewController: SwipeTableViewCellDelegate {
                 (action, indexPath) in
                 self.removeItem(item: (self.items?[indexPath.row])!)
             }
+            deleteAction.image = UIImage(named: "delete")
             swipeActions.append(deleteAction)
         }
         return swipeActions
