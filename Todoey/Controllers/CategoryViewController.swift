@@ -6,8 +6,9 @@
 //  Copyright © 2018 Randy Jimenez. All rights reserved.
 //
 
-import UIKit
+import ChameleonFramework
 import RealmSwift
+import UIKit
 
 class CategoryViewController: SwipeToTableViewController {
     // MARK: - Properties
@@ -33,7 +34,13 @@ class CategoryViewController: SwipeToTableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        cell.textLabel?.text = categories?[indexPath.row].title ?? "No lists found."
+        if let category = categories?[indexPath.row] {
+            cell.backgroundColor = UIColor(hexString: category.backgroundColor)
+            cell.textLabel?.text = category.title
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
+        } else {
+            cell.textLabel?.text = "No lists found."
+        }
         return cell
     }
 
@@ -56,6 +63,7 @@ class CategoryViewController: SwipeToTableViewController {
     func saveCategory(category: Category) {
         do {
             try realm.write {
+                category.backgroundColor = UIColor.randomFlat().hexValue()
                 realm.add(category)
                 tableView.reloadData()
             }
