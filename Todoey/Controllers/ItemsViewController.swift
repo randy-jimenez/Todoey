@@ -6,8 +6,9 @@
 //  Copyright © 2018 Randy Jimenez. All rights reserved.
 //
 
-import UIKit
+import ChameleonFramework
 import RealmSwift
+import UIKit
 
 class ItemsViewController: SwipeToTableViewController {
     // MARK: - Properties
@@ -40,9 +41,10 @@ class ItemsViewController: SwipeToTableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-
         if let itemAtPath = items?[indexPath.row] {
+            cell.backgroundColor = UIColor(hexString: selectedCategory?.backgroundColor).darken(byPercentage: CGFloat(indexPath.row) * 0.10)
             cell.textLabel?.text = itemAtPath.title
+            cell.textLabel?.textColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
             cell.accessoryType = itemAtPath.isDone ? .checkmark : .none
         } else {
             cell.textLabel?.text = "No items found"
