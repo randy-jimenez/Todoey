@@ -8,9 +8,8 @@
 
 import UIKit
 import RealmSwift
-import SwipeCellKit
 
-class ItemsViewController: UITableViewController {
+class ItemsViewController: SwipeToTableViewController {
     // MARK: - Properties
     let realm: Realm = try! Realm()
 
@@ -41,8 +40,7 @@ class ItemsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! SwipeTableViewCell
-        cell.delegate = self
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
         if let itemAtPath = items?[indexPath.row] {
             cell.textLabel?.text = itemAtPath.title
@@ -78,13 +76,15 @@ class ItemsViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    func removeItem(item: Item) {
-        do {
-            try realm.write {
-                realm.delete(item)
+    override func removeObject(forRowAt indexPath: IndexPath) { 
+        if let item = items?[indexPath.row] {
+            do {
+                try realm.write {
+                    realm.delete(item)
+                }
+            } catch {
+                print("Unable to delete List Items \(error)")
             }
-        } catch {
-            print("Unable to delete List Items \(error)")
         }
     }
 
@@ -119,32 +119,6 @@ class ItemsViewController: UITableViewController {
             textField = alertTextField
         }
         present(alert, animated: true, completion: nil)
-    }
-}
-
-// MARK: - SwipeTableViewCellDelegate
-extension ItemsViewController: SwipeTableViewCellDelegate {
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        var swipeActions: [SwipeAction] = []
-        if orientation == .right {
-            let deleteAction = SwipeAction(style: .destructive, title: "Delete Item?") {
-                (action, indexPath) in
-                if let item = self.items?[indexPath.row] {
-                    self.removeItem(item: item)
-                }
-            }
-            deleteAction.image = UIImage(named: "delete")
-            swipeActions.append(deleteAction)
-        }
-        return swipeActions
-    }
-
-    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
-        var options = SwipeTableOptions()
-        if orientation == .right {
-            options.expansionStyle = .destructive
-        }
-        return options
     }
 }
 

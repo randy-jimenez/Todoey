@@ -8,9 +8,8 @@
 
 import UIKit
 import RealmSwift
-import SwipeCellKit
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeToTableViewController {
     // MARK: - Properties
     let realm: Realm = try! Realm()
     
@@ -34,8 +33,7 @@ class CategoryViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
-        cell.delegate = self
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categories?[indexPath.row].title ?? "No lists found."
         return cell
     }
@@ -72,16 +70,18 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    func removeCategory(category: Category) {
-        do {
-            try realm.write {
-                for item in category.items {
-                   realm.delete(item)
+    override func removeObject(forRowAt indexPath: IndexPath) { 
+        if let category = categories?[indexPath.row] {
+            do {
+                try realm.write {
+                    for item in category.items {
+                       realm.delete(item)
+                    }
+                    realm.delete(category)
                 }
-                realm.delete(category)
+            } catch {
+                print("Unable to remove List \(error)")
             }
-        } catch {
-            print("Unable to remove List \(error)")
         }
     }
 
@@ -106,31 +106,5 @@ class CategoryViewController: UITableViewController {
             textField = alertTextField
         }
         present(alert, animated: true, completion: nil)
-    }
-}
-
-// MARK: - SwipeTableViewCellDelegate
-extension CategoryViewController: SwipeTableViewCellDelegate {
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        var swipeActions: [SwipeAction] = []
-        if orientation == .right {
-            let deleteAction = SwipeAction(style: .destructive, title: "Delete List?") {
-                (action, indexPath) in
-                if let category = self.categories?[indexPath.row] {
-                    self.removeCategory(category: category)
-                }
-            }
-            deleteAction.image = UIImage(named: "delete")
-            swipeActions.append(deleteAction)
-        }
-        return swipeActions
-    }
-
-    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
-        var options = SwipeTableOptions()
-        if orientation == .right {
-            options.expansionStyle = .destructive
-        }
-        return options
     }
 }
