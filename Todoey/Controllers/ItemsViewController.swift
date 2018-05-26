@@ -17,10 +17,8 @@ class ItemsViewController: SwipeToTableViewController {
     var selectedCategory: Category? {
         didSet {
             loadItems()
-            baseColor = UIColor(hexString: selectedCategory!.backgroundColor)!
         }
     }
-    var baseColor: UIColor!
     var items: Results<Item>?
 
     @IBOutlet weak var searchBar: UISearchBar!
@@ -34,25 +32,13 @@ class ItemsViewController: SwipeToTableViewController {
     // MARK: - viewWillAppear()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        guard let navBar = navigationController?.navigationBar else {
+        title = selectedCategory?.title
+        guard let baseColor = UIColor(hexString: selectedCategory?.backgroundColor) else {
             fatalError()
         }
-
-        title = selectedCategory?.title
-
-        let contrastColor = ContrastColorOf(baseColor, returnFlat: true)
-        navBar.barTintColor = baseColor
-        navBar.tintColor = contrastColor
-        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
-        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
+        updateNavigationColor(color: baseColor)
         searchBar.barTintColor = baseColor
         //tableView.backgroundColor = baseColor
-    }
-
-    // MARK: - viewWillDisappear()
-    override func viewWillDisappear(_ animated: Bool) {
-        
     }
 
     // MARK: - TableView DataSource Methods
@@ -68,6 +54,9 @@ class ItemsViewController: SwipeToTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let itemAtPath = items?[indexPath.row] {
             let percentage = CGFloat(indexPath.row) * 0.75 / CGFloat(items!.count)
+            guard let baseColor = UIColor(hexString: selectedCategory?.backgroundColor) else {
+                fatalError()
+            }
             cell.backgroundColor = baseColor.darken(byPercentage: percentage)
             let contrastColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
             cell.tintColor = contrastColor

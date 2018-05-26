@@ -23,6 +23,11 @@ class CategoryViewController: SwipeToTableViewController {
         loadCategories()
     }
 
+    // MARK: - viewWillAppear()
+    override func viewWillAppear(_ animated: Bool) {
+        updateNavigationColor(color: UIColor(hexString: "#1A99FC"))
+    }
+
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
