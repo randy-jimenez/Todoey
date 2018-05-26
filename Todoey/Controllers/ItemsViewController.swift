@@ -34,16 +34,25 @@ class ItemsViewController: SwipeToTableViewController {
     // MARK: - viewWillAppear()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let navBar = navigationController?.navigationBar {
-            let contrastColor = ContrastColorOf(baseColor, returnFlat: true)
-            navBar.barTintColor = baseColor
-            navBar.tintColor = contrastColor
-            navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
-            navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
-            searchBar.barTintColor = baseColor
-            title = selectedCategory!.title
-            //tableView.backgroundColor = baseColor
+
+        guard let navBar = navigationController?.navigationBar else {
+            fatalError()
         }
+
+        title = selectedCategory?.title
+
+        let contrastColor = ContrastColorOf(baseColor, returnFlat: true)
+        navBar.barTintColor = baseColor
+        navBar.tintColor = contrastColor
+        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
+        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
+        searchBar.barTintColor = baseColor
+        //tableView.backgroundColor = baseColor
+    }
+
+    // MARK: - viewWillDisappear()
+    override func viewWillDisappear(_ animated: Bool) {
+        
     }
 
     // MARK: - TableView DataSource Methods
