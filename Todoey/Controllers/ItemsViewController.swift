@@ -23,9 +23,15 @@ class ItemsViewController: SwipeToTableViewController {
     var baseColor: UIColor!
     var items: Results<Item>?
 
-    @IBOutlet weak var navItem: UINavigationItem!
-    @IBOutlet weak var addButton: UIBarButtonItem!
-    
+    @IBOutlet weak var searchBar: UISearchBar!
+
+    // MARK: - viewDidLoad()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.separatorStyle = .none
+    }
+
+    // MARK: - viewWillAppear()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if let navBar = navigationController?.navigationBar {
@@ -34,15 +40,10 @@ class ItemsViewController: SwipeToTableViewController {
             navBar.tintColor = contrastColor
             navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
             navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
-            navItem.title = selectedCategory?.title
+            searchBar.barTintColor = baseColor
+            title = selectedCategory!.title
             //tableView.backgroundColor = baseColor
         }
-    }
-
-    // MARK: - viewDidLoad()
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.separatorStyle = .none
     }
 
     // MARK: - TableView DataSource Methods
