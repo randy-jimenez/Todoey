@@ -25,7 +25,7 @@ class CategoryViewController: SwipeToTableViewController {
 
     // MARK: - viewWillAppear()
     override func viewWillAppear(_ animated: Bool) {
-        updateNavigationColor(color: UIColor(hexString: "#1A99FC"))
+        updateNavigationColor(withColor: UIColor(hexString: "#1A99FC"))
     }
 
     // MARK: - Table view data source

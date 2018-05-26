@@ -10,7 +10,7 @@ import ChameleonFramework
 import UIKit
 
 extension UIViewController {
-    func updateNavigationColor(color: UIColor) {
+    func updateNavigationColor(withColor color: UIColor) {
         guard let navBar = navigationController?.navigationBar else {
             fatalError()
         }

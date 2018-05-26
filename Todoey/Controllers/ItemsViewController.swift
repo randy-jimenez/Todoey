@@ -36,7 +36,7 @@ class ItemsViewController: SwipeToTableViewController {
         guard let baseColor = UIColor(hexString: selectedCategory?.backgroundColor) else {
             fatalError()
         }
-        updateNavigationColor(color: baseColor)
+        updateNavigationColor(withColor: baseColor)
         searchBar.barTintColor = baseColor
         //tableView.backgroundColor = baseColor
     }
