@@ -15,6 +15,7 @@ extension UIViewController {
             fatalError()
         }
         let contrastColor = ContrastColorOf(color, returnFlat: true)
+        navBar.backgroundColor = color
         navBar.barTintColor = color
         navBar.tintColor = contrastColor
         navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
