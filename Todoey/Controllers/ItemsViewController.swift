@@ -55,7 +55,7 @@ class ItemsViewController: SwipeToTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let itemAtPath = items?[indexPath.row] {
-            let percentage = CGFloat(indexPath.row) * 0.75 / CGFloat(items!.count)
+            let percentage = CGFloat(indexPath.row) * 0.50 / CGFloat(items!.count)
             guard let baseColor = UIColor(hexString: selectedCategory?.backgroundColor) else {
                 fatalError()
             }

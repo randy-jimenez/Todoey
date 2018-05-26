@@ -69,7 +69,7 @@ class CategoryViewController: SwipeToTableViewController {
     func saveCategory(category: Category) {
         do {
             try realm.write {
-                category.backgroundColor = UIColor.randomFlat().hexValue()
+                category.backgroundColor = UIColor(randomFlatColorOf:.light).hexValue()
                 realm.add(category)
                 tableView.reloadData()
             }
