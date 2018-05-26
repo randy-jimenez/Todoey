@@ -19,12 +19,12 @@ class CategoryViewController: SwipeToTableViewController {
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.separatorStyle = .none
         loadCategories()
     }
 
     // MARK: - viewWillAppear()
     override func viewWillAppear(_ animated: Bool) {
+        tableView.separatorStyle = .none
         updateNavigationColor(withColor: UIColor(hexString: "#1A99FC"))
     }
 

@@ -26,7 +26,6 @@ class ItemsViewController: SwipeToTableViewController {
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.separatorStyle = .none
     }
 
     // MARK: - viewWillAppear()
@@ -38,6 +37,9 @@ class ItemsViewController: SwipeToTableViewController {
         }
         updateNavigationColor(withColor: baseColor)
         searchBar.barTintColor = baseColor
+        searchBar.layer.borderColor = baseColor.cgColor
+        searchBar.layer.borderWidth = 1
+        tableView.separatorStyle = .none
         //tableView.backgroundColor = baseColor
     }
 
