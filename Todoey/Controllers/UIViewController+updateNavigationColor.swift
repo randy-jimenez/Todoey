@@ -15,11 +15,18 @@ extension UIViewController {
             fatalError()
         }
         let contrastColor = ContrastColorOf(color, returnFlat: true)
+
+        if contrastColor == UIColor.flatWhite() {
+            UIApplication.shared.statusBarStyle = .lightContent
+        } else {
+            UIApplication.shared.statusBarStyle = .default
+        }
+
+        navBar.shadowImage = UIImage()
         navBar.backgroundColor = color
         navBar.barTintColor = color
-        navBar.shadowImage = UIImage()
         navBar.tintColor = contrastColor
-        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
-        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: contrastColor]
+        navBar.titleTextAttributes = [.foregroundColor: contrastColor]
+        navBar.largeTitleTextAttributes = [.foregroundColor: contrastColor]
     }
 }
