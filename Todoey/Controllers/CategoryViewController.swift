@@ -24,8 +24,13 @@ class CategoryViewController: SwipeToTableViewController {
 
     // MARK: - viewWillAppear()
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         tableView.separatorStyle = .none
-        updateNavigationColor(withColor: UIColor(hexString: "#1A99FC"))
+        if let baseColor = UIColor.flatWhiteColorDark() {
+            updateNavigationColor(withColor: baseColor)
+            tableView.backgroundColor = UIColor.flatWhite()
+        }
+        title = "My Lists"
     }
 
     // MARK: - Table view data source
