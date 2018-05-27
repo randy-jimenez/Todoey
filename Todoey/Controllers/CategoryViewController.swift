@@ -22,8 +22,8 @@ class CategoryViewController: SwipeToTableViewController {
         loadCategories()
     }
 
-    // MARK: - viewWillAppear()
-    override func viewWillAppear(_ animated: Bool) {
+    // MARK: - viewDidAppear()
+    override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.separatorStyle = .none
         if let baseColor = UIColor.flatWhiteColorDark() {
