@@ -31,7 +31,6 @@ class ItemsViewController: SwipeToTableViewController {
     // MARK: - viewWillAppear()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        title = selectedCategory?.title
         guard let baseColor = UIColor(hexString: selectedCategory?.backgroundColor) else {
             fatalError()
         }
@@ -40,7 +39,8 @@ class ItemsViewController: SwipeToTableViewController {
         searchBar.layer.borderColor = baseColor.cgColor
         searchBar.layer.borderWidth = 1
         tableView.separatorStyle = .none
-        //tableView.backgroundColor = baseColor
+        tableView.backgroundColor = baseColor.lighten(byPercentage: 2.0)
+        title = selectedCategory?.title
     }
 
     // MARK: - TableView DataSource Methods
